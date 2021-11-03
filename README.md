@@ -24,7 +24,7 @@ fi
 
 ### mkpasswd
 
-Generate password
+Generate password, Inspired by [gaiustech/MkPasswd](https://github.com/gaiustech/MkPasswd).
 ```shell
 $ toolbox mkpasswd -h # help message
 A tool for generating random passwords
