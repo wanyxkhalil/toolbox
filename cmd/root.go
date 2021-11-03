@@ -9,7 +9,7 @@ var rootCmd = &cobra.Command{
 	Use:       "toolbox",
 	Short:     "Khalil toolbox",
 	Long:      `Khalil toolbox: mkpasswd`,
-	ValidArgs: []string{"mkpasswd"},
+	ValidArgs: []string{"mkpasswd", "https-expired"},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
