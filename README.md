@@ -46,3 +46,15 @@ Sample
 toolbox mkpasswd -l 17 # length is 17
 toolbox mkpasswd -l 17 -C 4 -d 4 -s 3 # length is 17, include 4 upper char, 4 digit, 3 special char, 6 lower char
 ```
+
+### https-expired
+
+Show the cert expiration time. Just like
+```shell
+alias ,https-expired='function _as() {echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -dates;};_as'
+```
+
+Sample
+```shell
+toolbox https-expired github.com
+```
