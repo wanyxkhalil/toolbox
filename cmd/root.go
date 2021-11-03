@@ -6,10 +6,9 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:       "toolbox",
-	Short:     "Khalil toolbox",
-	Long:      `Khalil toolbox: mkpasswd`,
-	ValidArgs: []string{"mkpasswd", "https-expired"},
+	Use:   "toolbox",
+	Short: "Khalil toolbox",
+	Long:  `Khalil toolbox: mkpasswd`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
