@@ -58,3 +58,12 @@ Sample
 ```shell
 toolbox https-expired github.com
 ```
+
+### mysql-to-gostruct
+
+#### 类型对应
+
+对应 github.com/go-sql-driver/mysql 中的 fields.go。
+
+
+> year 对应 uint8，无法对应 time.Time。

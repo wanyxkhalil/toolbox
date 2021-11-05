@@ -1,45 +1,49 @@
 package mysqltogostruct
 
 import (
+	"regexp"
 	"strings"
 )
 
 var typeMap = map[string]string{
-	"int":                "int64",
-	"integer":            "int64",
-	"tinyint":            "int64",
-	"smallint":           "int64",
-	"mediumint":          "int64",
+	"tinyint":            "int8",
+	"smallint":           "int16",
+	"mediumint":          "int32",
+	"int":                "int",
 	"bigint":             "int64",
-	"int unsigned":       "int64",
-	"integer unsigned":   "int64",
-	"tinyint unsigned":   "int64",
-	"smallint unsigned":  "int64",
-	"mediumint unsigned": "int64",
-	"bigint unsigned":    "int64",
-	"bit":                "int64",
-	"bool":               "bool",
-	"enum":               "string",
-	"set":                "string",
-	"varchar":            "string",
-	"char":               "string",
-	"tinytext":           "string",
-	"mediumtext":         "string",
-	"text":               "string",
-	"longtext":           "string",
-	"blob":               "string",
-	"tinyblob":           "string",
-	"mediumblob":         "string",
-	"longblob":           "string",
-	"date":               "time.Time",
-	"datetime":           "time.Time",
-	"timestamp":          "time.Time",
-	"time":               "time.Time",
-	"float":              "float64",
-	"double":             "float64",
-	"decimal":            "float64",
-	"binary":             "string",
-	"varbinary":          "string",
+	"tinyint unsigned":   "uint8",
+	"smallint unsigned":  "uint16",
+	"mediumint unsigned": "uint32",
+	"int unsigned":       "uint",
+	"bigint unsigned":    "uint64",
+
+	"float":                "float32",
+	"double":               "float64",
+	"decimal default null": "decimal.NullDecimal",
+	"decimal not null":     "decimal.Decimal",
+
+	"year":      "uint8",
+	"time":      "time.Time",
+	"date":      "time.Time",
+	"datetime":  "time.Time",
+	"timestamp": "time.Time",
+
+	"char":       "string",
+	"varchar":    "string",
+	"tinytext":   "string",
+	"text":       "string",
+	"mediumtext": "string",
+	"longtext":   "string",
+	"enum":       "string",
+	"set":        "string",
+
+	"bit":        "byte",
+	"binary":     "[]byte",
+	"varbinary":  "[]byte",
+	"tinyblob":   "[]byte",
+	"blob":       "[]byte",
+	"mediumblob": "[]byte",
+	"longblob":   "[]byte",
 }
 
 type Table struct {
@@ -69,9 +73,21 @@ func structure(sql string) *Table {
 	i1 := strings.Index(s, "(")
 	i2 := strings.LastIndex(s, ")")
 	split := strings.Split(s[i1+1:i2], ",")
-	for _, cs := range split {
-		// if not started with ` then break, that means key rows.
+	for i, cs := range split {
 		cs = strings.TrimSpace(cs)
+
+		// if decimal(10,2)，2 line combination
+		endWithDigit := regexp.MustCompile(`.*\d$`)
+		startWithDigit := regexp.MustCompile(`^\d.*`)
+
+		if endWithDigit.MatchString(cs) {
+			continue
+		}
+		if startWithDigit.MatchString(cs) {
+			cs = strings.TrimSpace(split[i-1]) + cs
+		}
+
+		// if not started with ` then break, that means key rows.
 		if cs[0] != 96 {
 			break
 		}
@@ -112,6 +128,15 @@ func getColumnInfo(s string) (c *Column) {
 	// append unsigned
 	if split[2] == "unsigned" {
 		c.Type = c.Type + " unsigned"
+	}
+
+	// decimal
+	if c.Type == "decimal" {
+		if strings.Contains(s, "default null") {
+			c.Type = c.Type + " default null"
+		} else if strings.Contains(s, "not null") {
+			c.Type = c.Type + " not null"
+		}
 	}
 
 	c.Type = typeMap[c.Type]
