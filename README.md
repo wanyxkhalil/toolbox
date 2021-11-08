@@ -1,5 +1,5 @@
 # toolbox
-toolbox: mkpasswd...
+toolbox: mkpasswd, https-expired, mysql-to-gostruct ...
 
 
 ## Install
@@ -58,3 +58,135 @@ Sample
 ```shell
 toolbox https-expired github.com
 ```
+
+### mysql-to-gostruct
+
+#### 类型对应
+
+主要对应 github.com/go-sql-driver/mysql 中的 fields.go。
+
+| tinyint            | int8                |
+| ------------------ | ------------------- |
+| smallint           | int16               |
+| mediumint          | int32               |
+| int                | int                 |
+| bigint             | int64               |
+| tinyintunsigned    | uint8               |
+| smallintunsigned   | uint16              |
+| mediumintunsigned  | uint32              |
+| intunsigned        | uint                |
+| bigintunsigned     | uint64              |
+|                    |                     |
+| float              | float32             |
+| double             | float64             |
+| decimaldefaultnull | decimal.NullDecimal |
+| decimalnotnull     | decimal.Decimal     |
+|                    |                     |
+| year               | uint8               |
+| time               | time.Time           |
+| date               | time.Time           |
+| datetime           | time.Time           |
+| timestamp          | time.Time           |
+|                    |                     |
+| char               | string              |
+| varchar            | string              |
+| tinytext           | string              |
+| text               | string              |
+| mediumtext         | string              |
+| longtext           | string              |
+| enum               | string              |
+| set                | string              |
+|                    |                     |
+| bit                | byte                |
+| binary             | []byte              |
+| varbinary          | []byte              |
+| tinyblob           | []byte              |
+| blob               | []byte              |
+| mediumblob         | []byte              |
+| longblob           | []byte              |
+
+
+> - year 对应 uint8，无法对应 time.Time。
+> - decimal 对应 github.com/shopspring/decimal
+
+### Usage
+
+```shell
+toolbox mysql-to-gostruct /Tmp/table.sql /Tmp
+```
+
+> - table.sql：使用 `show create table xxx` 生成，支持多个表
+> - /Tmp: 结果目录，目录名作为包名
+
+Table.sql 示例：
+
+```sql
+CREATE TABLE `user`
+(
+    `id`         bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `name`       varchar(255)   NOT NULL COMMENT '用户名',
+    `valid`      tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否有效：0_无效，1_有效',
+    `dec`        decimal(10, 2)          DEFAULT NULL,
+    `udec`       decimal(10, 2) NOT NULL,
+    `created_at` datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY          `idx_updated_at` (`updated_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=17318 DEFAULT CHARSET=utf8mb4 COMMENT='用户';
+
+CREATE TABLE `my_time`
+(
+    `id`        bigint unsigned NOT NULL AUTO_INCREMENT,
+    `year` year DEFAULT NULL,
+    `time`      time     DEFAULT NULL,
+    `date`      date     DEFAULT NULL,
+    `datetime`  datetime DEFAULT NULL,
+    `timestamp` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+
+
+结果：/Tmp/user.go, /Tmp/my_time.go
+
+```go
+package tmp
+
+import (
+	"github.com/shopspring/decimal"
+	"time"
+)
+
+// User 用户
+type User struct {
+	Id	uint64
+	// 用户名
+	Name	string
+	// 是否有效：0_无效，1_有效
+	Valid	int8
+	Dec	decimal.NullDecimal
+	Udec	decimal.Decimal
+	CreatedAt	time.Time
+	UpdatedAt	time.Time
+}
+```
+
+```go
+package tmp
+
+import (
+	"time"
+)
+
+// MyTime
+type MyTime struct {
+	Id	uint64
+	Year	uint8
+	Time	time.Time
+	Date	time.Time
+	Datetime	time.Time
+	Timestamp	time.Time
+}
+```
+
