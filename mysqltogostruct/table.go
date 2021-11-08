@@ -1,6 +1,11 @@
 package mysqltogostruct
 
 import (
+	"bufio"
+	"fmt"
+	"github.com/wanyxkhalil/toolbox/util"
+	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -46,10 +51,17 @@ var typeMap = map[string]string{
 	"longblob":   "[]byte",
 }
 
+var importMap = map[string]string{
+	"decimal.NullDecimal": "github.com/shopspring/decimal",
+	"decimal.Decimal":     "github.com/shopspring/decimal",
+	"time.Time":           "time",
+}
+
 type Table struct {
 	Name    string
 	Columns []Column
 	Comment string
+	Imports util.Set
 }
 
 type Column struct {
@@ -58,7 +70,41 @@ type Column struct {
 	Comment string
 }
 
-func structure(sql string) *Table {
+func (t *Table) toFile(dirPath string) {
+	p := path.Join(dirPath, t.Name+".go")
+	f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	writer := bufio.NewWriter(f)
+	writer.WriteString(fmt.Sprintf("package %s\n\n", strings.ToLower(path.Base(dirPath))))
+
+	// import
+	if len(t.Imports) > 0 {
+		writer.WriteString("import (\n")
+		for s := range t.Imports {
+			writer.WriteString(fmt.Sprintf("\t\"%s\"\n", s))
+		}
+		writer.WriteString(")\n\n")
+	}
+
+	// struct
+	writer.WriteString(fmt.Sprintf("// %s %s\n", util.ToCamel(t.Name), t.Comment))
+	writer.WriteString(fmt.Sprintf("type %s struct {\n", util.ToCamel(t.Name)))
+	for _, column := range t.Columns {
+		if len(column.Comment) > 0 {
+			writer.WriteString(fmt.Sprintf("\t// %s\n", column.Comment))
+		}
+		writer.WriteString(fmt.Sprintf("\t%s\t%s\n", util.ToCamel(column.Name), column.Type))
+	}
+	writer.WriteString("}\n")
+
+	writer.Flush()
+}
+
+func toTable(sql string) *Table {
 	t := new(Table)
 	t.Columns = []Column{}
 
@@ -95,7 +141,18 @@ func structure(sql string) *Table {
 		t.Columns = append(t.Columns, *getColumnInfo(cs))
 	}
 
+	t.Imports = getImports(t.Columns)
 	return t
+}
+
+func getImports(columns []Column) (s util.Set) {
+	s = make(util.Set)
+	for _, column := range columns {
+		if v, ok := importMap[column.Type]; ok {
+			s.Add(v)
+		}
+	}
+	return
 }
 
 // getTableInfo get table name and comment

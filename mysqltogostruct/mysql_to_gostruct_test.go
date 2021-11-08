@@ -2,29 +2,17 @@ package mysqltogostruct
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"testing"
 )
 
-func readFile() string {
-	f, err := os.Open("./data/table.sql")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	bytes, err := io.ReadAll(f)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
-}
-
-func TestStructure(t *testing.T) {
-	sql := readFile()
+func TestToTable(t *testing.T) {
+	sql := readSource("./data/table.sql")
 	fmt.Printf("%s\n\n", sql)
 
-	table := structure(sql)
+	table := toTable(sql)
 	fmt.Printf("%+v\n", table)
+}
+
+func TestRun(t *testing.T) {
+	//Run("/Users/khalil/Projects/github/toolbox/mysqltogostruct/data/table.sql", "/Users/khalil/Downloads")
 }
