@@ -1,6 +1,21 @@
 # toolbox
-toolbox: mkpasswd, https-expired, mysql-to-gostruct ...
+toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip ...
 
+Table of Contents
+=================
+
+* [toolbox](#toolbox)
+    * [Install](#install)
+        * [Completion](#completion)
+    * [Usage](#usage)
+        * [mkpasswd](#mkpasswd)
+        * [https-expired](#https-expired)
+        * [mysql-to-gostruct](#mysql-to-gostruct)
+            * [类型对应](#类型对应)
+            * [Sample](#sample)
+        * [ip](#ip)
+            * [Local machine address](#local-machine-address)
+            * [Remote host address](#remote-host-address)
 
 ## Install
 
@@ -109,7 +124,7 @@ toolbox https-expired github.com
 > - year 对应 uint8，无法对应 time.Time。
 > - decimal 对应 github.com/shopspring/decimal
 
-### Usage
+#### Sample
 
 ```shell
 toolbox mysql-to-gostruct /Tmp/table.sql /Tmp
@@ -190,3 +205,31 @@ type MyTime struct {
 }
 ```
 
+### ip
+
+Get IP address.
+
+#### Local machine address
+
+```shell
+toolbox ip
+```
+
+Result:
+```shell
+IP Address:		180.167.000.000
+Country:		China
+Intranet:		192.168.3.238
+```
+
+#### Remote host address
+
+```shell
+toolbox ip
+```
+
+Result:
+
+```shell
+220.181.000.000
+```
