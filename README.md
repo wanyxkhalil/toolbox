@@ -5,18 +5,18 @@ toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github ...
 Table of Contents
 =================
 
-    * [Install](#Install)
-        * [Completion](#Completion)
-    * [Usage](#Usage)
-        * [mkpasswd](#mkpasswd)
-        * [https-expired](#https-expired)
-        * [mysql-to-gostruct](#mysql-to-gostruct)
-            * [类型对应](#类型对应)
-            * [Sample](#Sample)
-        * [ip](#ip)
-            * [Local machine address](#Local machine address)
-            * [Remote host address](#Remote host address)
-        * [md-toc-github](#md-toc-github)
+* [Install](#Install)
+    * [Completion](#Completion)
+* [Usage](#Usage)
+    * [mkpasswd](#mkpasswd)
+    * [https-expired](#https-expired)
+    * [mysql-to-gostruct](#mysql-to-gostruct)
+        * [类型对应](#类型对应)
+        * [Sample](#Sample)
+    * [ip](#ip)
+        * [Local machine address](#Local machine address)
+        * [Remote host address](#Remote host address)
+    * [md-toc-github](#md-toc-github)
 
 ## Install
 
