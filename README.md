@@ -1,21 +1,22 @@
 # toolbox
-toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip ...
+
+toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github ...
 
 Table of Contents
 =================
 
-* [toolbox](#toolbox)
-    * [Install](#install)
-        * [Completion](#completion)
-    * [Usage](#usage)
-        * [mkpasswd](#mkpasswd)
-        * [https-expired](#https-expired)
-        * [mysql-to-gostruct](#mysql-to-gostruct)
-            * [类型对应](#类型对应)
-            * [Sample](#sample)
-        * [ip](#ip)
-            * [Local machine address](#local-machine-address)
-            * [Remote host address](#remote-host-address)
+* [Install](#install)
+    * [Completion](#completion)
+* [Usage](#usage)
+    * [mkpasswd](#mkpasswd)
+    * [https-expired](#https-expired)
+    * [mysql-to-gostruct](#mysql-to-gostruct)
+        * [类型对应](#类型对应)
+        * [Sample](#sample)
+    * [ip](#ip)
+        * [Local machine address](#local-machine-address)
+        * [Remote host address](#remote-host-address)
+    * [md-toc-github](#md-toc-github)
 
 ## Install
 
@@ -26,8 +27,8 @@ toolbox -h
 
 ### Completion
 
-If you use zsh, add this to ~/.zshrc & source.
-Also support bash, fish, powershell 
+If you use zsh, add this to ~/.zshrc & source. Also support bash, fish, powershell
+
 ```shell
 if [ $commands[toolbox] ]; then
 	source <(toolbox completion zsh)
@@ -40,6 +41,7 @@ fi
 ### mkpasswd
 
 Generate password, Inspired by [gaiustech/MkPasswd](https://github.com/gaiustech/MkPasswd).
+
 ```shell
 $ toolbox mkpasswd -h # help message
 A tool for generating random passwords
@@ -57,6 +59,7 @@ Flags:
 ```
 
 Sample
+
 ```shell
 toolbox mkpasswd -l 17 # length is 17
 toolbox mkpasswd -l 17 -C 4 -d 4 -s 3 # length is 17, include 4 upper char, 4 digit, 3 special char, 6 lower char
@@ -65,11 +68,13 @@ toolbox mkpasswd -l 17 -C 4 -d 4 -s 3 # length is 17, include 4 upper char, 4 di
 ### https-expired
 
 Show the cert expiration time. Just like
+
 ```shell
 alias ,https-expired='function _as() {echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -dates;};_as'
 ```
 
 Sample
+
 ```shell
 toolbox https-expired github.com
 ```
@@ -120,7 +125,6 @@ toolbox https-expired github.com
 | mediumblob         | []byte              |
 | longblob           | []byte              |
 
-
 > - year 对应 uint8，无法对应 time.Time。
 > - decimal 对应 github.com/shopspring/decimal
 
@@ -161,8 +165,6 @@ CREATE TABLE `my_time`
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
-
-
 结果：/Tmp/user.go, /Tmp/my_time.go
 
 ```go
@@ -175,15 +177,15 @@ import (
 
 // User 用户
 type User struct {
-	Id	uint64
+	Id uint64
 	// 用户名
-	Name	string
+	Name string
 	// 是否有效：0_无效，1_有效
-	Valid	int8
-	Dec	decimal.NullDecimal
-	Udec	decimal.Decimal
-	CreatedAt	time.Time
-	UpdatedAt	time.Time
+	Valid     int8
+	Dec       decimal.NullDecimal
+	Udec      decimal.Decimal
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 ```
 
@@ -196,12 +198,12 @@ import (
 
 // MyTime
 type MyTime struct {
-	Id	uint64
-	Year	uint8
-	Time	time.Time
-	Date	time.Time
-	Datetime	time.Time
-	Timestamp	time.Time
+	Id        uint64
+	Year      uint8
+	Time      time.Time
+	Date      time.Time
+	Datetime  time.Time
+	Timestamp time.Time
 }
 ```
 
@@ -216,6 +218,7 @@ toolbox ip
 ```
 
 Result:
+
 ```shell
 IP Address:		180.167.000.000
 Country:		China
@@ -232,4 +235,39 @@ Result:
 
 ```shell
 220.181.000.000
+```
+
+### md-toc-github
+
+Generate Markdown TOC for GitHub
+
+Sample:
+
+```shell
+## This line for toc test
+
+toolbox md-toc-github README.md
+```
+
+Result:
+
+```markdown
+
+Table of Contents
+=================
+
+* [toolbox](#toolbox)
+    * [Install](#Install)
+        * [Completion](#Completion)
+    * [Usage](#Usage)
+        * [mkpasswd](#mkpasswd)
+        * [https-expired](#https-expired)
+        * [mysql-to-gostruct](#mysql-to-gostruct)
+            * [类型对应](#类型对应)
+            * [Sample](#Sample)
+        * [ip](#ip)
+            * [Local machine address](#Local machine address)
+            * [Remote host address](#Remote host address)
+        * [md-toc-github](#md-toc-github)
+
 ```
