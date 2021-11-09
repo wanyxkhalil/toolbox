@@ -52,7 +52,7 @@ func getHeaders(p string) []header {
 			if len(ss) == 2 {
 				i := header{
 					level: len(ss[0]),
-					name:  strings.TrimSpace(ss[1]),
+					name:  convertName(ss[1]),
 					line:  i,
 				}
 				headers = append(headers, i)
@@ -77,4 +77,10 @@ func getHeaders(p string) []header {
 	}
 
 	return headers[:j]
+}
+
+func convertName(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.ToLower(s)
+	return strings.ReplaceAll(s, " ", "-")
 }
