@@ -24,7 +24,7 @@ func printHeaders(headers []header) {
 	fmt.Printf("\nTable of Contents\n=================\n\n")
 	for _, h := range headers {
 		prefix := strings.Repeat("    ", h.level-1)
-		fmt.Printf("%s* [%s](#%s)\n", prefix, h.name, h.name)
+		fmt.Printf("%s* [%s](#%s)\n", prefix, h.name, convertName(h.name))
 	}
 	fmt.Println()
 }
@@ -52,7 +52,7 @@ func getHeaders(p string) []header {
 			if len(ss) == 2 {
 				i := header{
 					level: len(ss[0]),
-					name:  convertName(ss[1]),
+					name:  strings.TrimSpace(ss[1]),
 					line:  i,
 				}
 				headers = append(headers, i)
@@ -80,7 +80,6 @@ func getHeaders(p string) []header {
 }
 
 func convertName(s string) string {
-	s = strings.TrimSpace(s)
 	s = strings.ToLower(s)
 	return strings.ReplaceAll(s, " ", "-")
 }
