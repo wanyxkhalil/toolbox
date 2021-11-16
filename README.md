@@ -1,6 +1,6 @@
 # toolbox
 
-toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github ...
+toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github, pension ...
 
 Table of Contents
 =================
@@ -11,12 +11,11 @@ Table of Contents
     * [mkpasswd](#mkpasswd)
     * [https-expired](#https-expired)
     * [mysql-to-gostruct](#mysql-to-gostruct)
-        * [类型对应](#类型对应)
-        * [Sample](#sample)
     * [ip](#ip)
         * [Local machine address](#local-machine-address)
         * [Remote host address](#remote-host-address)
     * [md-toc-github](#md-toc-github)
+    * [Pension](#pension)
 
 ## Install
 
@@ -81,9 +80,7 @@ toolbox https-expired github.com
 
 ### mysql-to-gostruct
 
-#### 类型对应
-
-主要对应 github.com/go-sql-driver/mysql 中的 fields.go。
+类型对应主要使用 github.com/go-sql-driver/mysql 中的 fields.go。
 
 | tinyint            | int8                |
 | ------------------ | ------------------- |
@@ -128,7 +125,7 @@ toolbox https-expired github.com
 > - year 对应 uint8，无法对应 time.Time。
 > - decimal 对应 github.com/shopspring/decimal
 
-#### Sample
+使用示例：
 
 ```shell
 toolbox mysql-to-gostruct /Tmp/table.sql /Tmp
@@ -271,3 +268,16 @@ Table of Contents
         * [md-toc-github](#md-toc-github)
 
 ```
+
+### Pension
+
+计算基本养老金
+
+```shell
+toolbox pension --avgWages 10338 --wageRatio 0.6 --years 30 --personalWages 6000 --months 150
+```
+> 上年度月平均工资：10338
+> 本人历年缴费指数的平均值：0.6
+> 累计缴费：30年
+> 本人缴费工资基数：6000
+> 计发月数：150
