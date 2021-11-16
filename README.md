@@ -277,7 +277,11 @@ Table of Contents
 toolbox pension --avgWages 10338 --wageRatio 0.6 --years 30 --personalWages 6000 --months 150
 ```
 > 上年度月平均工资：10338
+> 
 > 本人历年缴费指数的平均值：0.6
+> 
 > 累计缴费：30年
+> 
 > 本人缴费工资基数：6000
+> 
 > 计发月数：150
