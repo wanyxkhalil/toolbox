@@ -1,6 +1,7 @@
 # toolbox
 
-toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github, pension ...
+toolbox: mkpasswd, https-expired, mysql-to-gostruct, ip, md-toc-github, pension, 
+fortune ...
 
 Table of Contents
 =================
@@ -16,6 +17,7 @@ Table of Contents
         * [Remote host address](#remote-host-address)
     * [md-toc-github](#md-toc-github)
     * [Pension](#pension)
+    * [Fortune](#fortune)
 
 ## Install
 
@@ -276,12 +278,25 @@ Table of Contents
 ```shell
 toolbox pension --avgWages 10338 --wageRatio 0.6 --years 30 --personalWages 6000 --months 150
 ```
+
 > 上年度月平均工资：10338
-> 
+>
 > 本人历年缴费指数的平均值：0.6
-> 
+>
 > 累计缴费：30年
-> 
+>
 > 本人缴费工资基数：6000
-> 
+>
 > 计发月数：150
+
+### Fortune
+
+随机显示名言警句
+
+```shell
+toolbox fortune -p ./data.txt
+# Recommend: append with cowsay
+toolbox fortune -p ./data.txt | cowsay
+```
+
+[数据文件示例](./fortune/data/data.txt)
